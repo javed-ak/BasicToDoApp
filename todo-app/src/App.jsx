@@ -3,11 +3,13 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
+import Navbar from './components/NavBar';
 
 function App() {
 
   return (
     <>
+    <Navbar />
     <MainApp />
     </>
   )
