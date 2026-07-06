@@ -138,10 +138,6 @@ router.get('/todos', authMiddleware, async (req, res) => {
     try {
         const todos = await Todo.find({
         userId: req.userId
-        }, {
-            title: true,
-            description: true,
-            isDone: true
         });
         
         return res.json({
@@ -155,21 +151,59 @@ router.get('/todos', authMiddleware, async (req, res) => {
     }
 })
 
-router.put('/todo/:id', (req, res) => {
-    const updateTodoPayload = req.body;
-    const parsedPayload = updateTodo.safeParse(updateTodoPayload);
-
-    if(!parsedPayload.success){
-        return res.status(403).json({msg: "Inputs are not correct"});
-    }
-
-    res.json({msg: "Endpoint working correctly"})
-})
-
-router.delete('/todo/:id', (req, res) => {
+router.put('/todo/:id', authMiddleware, async (req, res) => {
     const todoId = req.params.id;
 
-    res.json({msg: "Endpoint working correctly"})
+    try {
+        const todo = await Todo.findOneAndUpdate({
+            _id: todoId,
+            userId: req.userId
+        }, {
+            isDone: true
+        }, {
+            new: true
+        })
+
+        if(!todo) {
+            return res.status(404).json({
+                msg: "Todo not found"
+            });
+        }
+
+        return res.status(200).json({
+            msg: "Todo marked as done",
+            todo
+        });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            msg: "Internal server error"
+        })
+    }
+})
+
+router.delete('/todo/:id', authMiddleware, async (req, res) => {
+    const todoId = req.params.id;
+
+    try{
+        const deleteTodo = await Todo.deleteOne({
+            _id: todoId,
+            userId: req.userId
+        })
+        if (!deleteTodo) {
+        return res.status(404).json({
+            msg: "Todo not found"
+        });
+        }
+        return res.json({
+            msg: "Todo deleted successfully"
+        });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            msg: "Internal server error"
+        })
+    }
 })
 
 module.exports = router;
