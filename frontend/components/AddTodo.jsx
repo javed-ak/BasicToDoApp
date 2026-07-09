@@ -5,18 +5,19 @@ import Button from '../components/Button';
 const AddTodo = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [debounceTitle, setDebounceTitle] = useState('')
+    const [debounceDescription, setDebounceDescription] = useState('')
 
-    const debounce = ({data, setData}) => {
-        useEffect(() => {
-            const timer = setTimeout(() => {
-                setData(data)
-            }, 500);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebounceTitle(title)
+            setDebounceDescription(description)
+        }, 500);
 
-            return () => {
-                clearTimeout(timer);
-            }
-        })
-    }
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [title, description])
 
     const handleTodo = async () => {
         const token = localStorage.getItem('token')
@@ -54,8 +55,8 @@ const AddTodo = () => {
             <div className="flex flex-col gap-3">
                 <div className="font-semibold text-xl text-slate-900">Preview</div>
                 <div>
-                    <div><span className="font-medium">Title:</span> {title}</div>
-                    <div><span className="font-medium">Description:</span> {description}</div>
+                    <div><span className="font-medium">Title:</span> {debounceTitle}</div>
+                    <div><span className="font-medium">Description:</span> {debounceDescription}</div>
                 </div>
             </div>
         </div>

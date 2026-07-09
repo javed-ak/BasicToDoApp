@@ -1,23 +1,10 @@
 import { useEffect, useState } from "react"
 import TodoCard from "./TodoCard"
 import axios from "axios"
+import useTodos from "../hooks/useTodos"
 
 const AllTodos = () => {
-    const [todos, setTodos] = useState([]);
-
-    useEffect(() => {
-        const fetchTodos = async () => {
-            const response = await axios.get('http://localhost:3000/api/v1/todos',
-                {
-                    headers: {
-                        Authorization: localStorage.getItem('token')
-                    }
-                }
-            )
-            setTodos(response.data.todos)
-        }
-        fetchTodos();
-    }, [])
+    const [todos, setTodos] = useTodos();
 
     return (
         <div className="flex flex-col gap-3">

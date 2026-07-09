@@ -2,12 +2,16 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useState } from "react";
 import axios from "axios";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { firstNameAtom, isLoginAtom } from "../src/store/atoms/isLogin";
 
 const Signin = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
+    const [login, setLogin] = useRecoilState(isLoginAtom);
+    const [firstName, setFirstName] = useRecoilState(firstNameAtom);
 
     const userSignin = async () => {
         await axios.post('http://localhost:3000/api/v1/signin', {
@@ -15,7 +19,10 @@ const Signin = () => {
             password
         })
         .then((response) => {
-            localStorage.setItem('token', response.data.token)
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('firstName', response.data.firstName);
+            setFirstName(response.data.firstName);
+            setLogin(true);
             navigate('/dashboard')
         })
         .catch((err) => {

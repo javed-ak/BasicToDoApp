@@ -30,7 +30,8 @@ const TodoCard = ({todo, todos, setTodos}) => {
     }
 
     return (
-        <div className="p-5 shadow-sm max-w-lg rounded-lg bg-slate-50 flex flex-col gap-3">
+        <div className="relative p-5 shadow-sm max-w-lg rounded-lg bg-slate-50 flex flex-col gap-3">
+            {todo.isDone && <span className=" absolute top-5 right-5 border rounded-lg bg-green-400 text-white text-xs p-1 font-bold">Done</span>}
             <div className="text-2xl font-semibold">{todo.title}</div>
             <div>{todo.description}</div>
             <div className="flex gap-3 max-w-lg">

@@ -6,14 +6,17 @@ import Dashboard from '../pages/Dashboard'
 import Footer from '../components/Footer'
 import Signin from '../pages/Signin'
 import ProtectedRoute from '../components/ProtectedRoute'
+import { RecoilRoot, useRecoilValue } from 'recoil'
 
 function App() {
 
   return (
     <BrowserRouter>
+    <RecoilRoot>
       <Navbar />
       <MainApp />
       <Footer />
+    </RecoilRoot>
     </BrowserRouter>
   )
 }

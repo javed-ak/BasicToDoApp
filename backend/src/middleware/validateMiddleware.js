@@ -1,5 +1,4 @@
 const validateMiddleware = (req, res, next) => {
-    console.log("ValidateMiddleware");
     next()
 }
 
