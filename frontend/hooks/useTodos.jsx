@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { isLoading } from "../src/store/atoms/isLogin";
 
 const useTodos = () => {
     const [todos, setTodos] = useState([]);
+    const [loading, setLoading] = useRecoilState(isLoading);
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -14,7 +17,8 @@ const useTodos = () => {
                         }
                     }
                 )
-                setTodos(response.data.todos)
+                setLoading(false);
+                setTodos(response.data.todos);
             } catch (err) {
                 console.log(err)
             }

@@ -1,17 +1,28 @@
 import axios from "axios"
 import Button from "./Button"
+import { toast, ToastContainer } from "react-toastify";
 
 const TodoCard = ({todo, todos, setTodos}) => {
     const todoId = todo._id;
+    const notifyTodoDeleted = () => toast.success('Todo deleted successfully')
+    const notifyTodoUpdated = () => toast.success('Todo Marked as Done')
+    const notifyError = () => toast.error('Something went wrong')
+
     const deleteTodo = async () => {
-        await axios.delete(`http://localhost:3000/api/v1/todo/${todoId}`, 
-            {
-                headers: {
-                    Authorization: localStorage.getItem('token')
+        try {
+            await axios.delete(`http://localhost:3000/api/v1/todo/${todoId}`, 
+                {
+                    headers: {
+                        Authorization: localStorage.getItem('token')
+                    }
                 }
-            }
-        )
-        setTodos(todos.filter(t => t._id !== todo._id))
+            )
+            notifyTodoDeleted();
+            setTodos(todos.filter(t => t._id !== todo._id))
+        }catch (err) {
+            notifyError();
+            console.log('Something went wrong')
+        }
     }
 
     const markAsDone = async () => {
@@ -25,7 +36,7 @@ const TodoCard = ({todo, todos, setTodos}) => {
                 }
             }
         )
-        
+        notifyTodoUpdated();
         setTodos(todos.map(t => t._id === todo._id ? {...t, isDone: true} : t))
     }
 
@@ -37,6 +48,7 @@ const TodoCard = ({todo, todos, setTodos}) => {
             <div className="flex gap-3 max-w-lg">
                 {!todo.isDone && <Button onClick={markAsDone} title={'Mark as Done'}/>}
                 <Button onClick={deleteTodo} title={'Delete'}/>
+                {/* <ToastContainer /> */}
             </div>
         </div>
     )

@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import Button from '../components/Button';
+import { ToastContainer, toast } from 'react-toastify';
 
 const AddTodo = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [debounceTitle, setDebounceTitle] = useState('')
     const [debounceDescription, setDebounceDescription] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
+    const notify = () => toast.success('Todo created successfully');
+    const notifyError = () => toast.error('Something went wrong!')
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -20,6 +24,7 @@ const AddTodo = () => {
     }, [title, description])
 
     const handleTodo = async () => {
+        setIsLoading(true);
         const token = localStorage.getItem('token')
         try {
             const response = await axios.post('http://localhost:3000/api/v1/todo', 
@@ -33,9 +38,13 @@ const AddTodo = () => {
                     }
                 }
             )
+            setIsLoading(false);
+            notify();
         } catch (err) {
             console.log(err);
+            notifyError();
         } finally{
+            setIsLoading(false);
             console.log("Request completed");
         }
     }
@@ -49,7 +58,8 @@ const AddTodo = () => {
                     <input type="text" name="todoDescription" id="todoDescription" placeholder="Description" required className="border border-slate-200 p-2 rounded" onChange={(e) => setDescription(e.target.value)}/>
                 </div>
                 <div>
-                    <Button onClick={handleTodo} title={"Add Todo"}/>
+                    <Button onClick={handleTodo} loading={isLoading} title={"Add Todo"}/>
+                    <ToastContainer />
                 </div>
             </div>
             <div className="flex flex-col gap-3">

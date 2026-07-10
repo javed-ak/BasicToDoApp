@@ -9,3 +9,8 @@ export const firstNameAtom = atom({
     key: "firstNameAtom",
     default: localStorage.getItem('firstName') || ""
 })
+
+export const isLoading = atom({
+    key: "isLoading",
+    default: true
+})
