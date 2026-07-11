@@ -10,6 +10,7 @@ const useTodos = () => {
     useEffect(() => {
         const fetchTodos = async () => {
             try {
+                await new Promise (e => setTimeout(e, 2000));
                 const response = await axios.get('http://localhost:3000/api/v1/todos',
                     {
                         headers: {
